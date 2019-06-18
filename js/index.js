@@ -47,23 +47,43 @@ logo.setAttribute('src', siteContent["nav"]["img-src"])
 
 /*Nav Bar*/
 class NavBar {
-  constructor(navContents) {
-    this.navContents = navContents;
-    
+  constructor(attributes) {
+    this.attributes = attributes;
     this.nav = document.querySelector("header nav");
   }
 
   build() {
 
-    const links = this.nav.childNodes;
-    links[1].textContent = this.navContents["nav-item-1"];
-    links[3].textContent = this.navContents["nav-item-2"];
-    links[5].textContent = this.navContents["nav-item-3"];
-    links[7].textContent = this.navContents["nav-item-4"];
-    links[9].textContent = this.navContents["nav-item-5"];
-    links[11].textContent = this.navContents["nav-item-6"];
-    
+    const links = this.nav.querySelectorAll("a");
 
+    const items = Object.values(this.attributes);
+    items.splice(6,1);
+
+    const fragment = document.createDocumentFragment();
+
+    for(let i = 0; i < links.length; i++) {
+      links[i].textContent = items[i];
+      links[i].style.color = "green";
+      fragment.appendChild(links[i]); 
+    }
+    
+    this.nav.appendChild(fragment);
+    
+    // New Nav Bar Items
+     const extraLinks = ["Blog", "Projects"];
+
+     for(let i = 0; i < extraLinks.length; i++) {
+
+      const link = document.createElement("a");
+      link.setAttribute("href", "#")
+      link.textContent = extraLinks[i];
+      link.style.color = "crimson";
+      fragment.appendChild(link);
+
+     }
+     
+     this.nav.prepend(fragment);
+  
   }
 }
 
@@ -104,7 +124,7 @@ class MainContent {
   }
 
   build() {
-    console.log(this.mainContentContainer.childNodes); 
+     
     const topContentContainer = this.mainContentContainer.querySelector(".top-content"); // Top-Content
 
     const featuresContainer = topContentContainer.querySelector(".text-content:first-child"); //Features
@@ -176,10 +196,7 @@ class Contact {
     })
 
     contactHeading.appendChild(contactHeadingContent);
-
-    
     contactHeading.after(fragment)
-    
     
     
   }
@@ -197,12 +214,6 @@ class Footer{
   }
 }
     
-
-
-    
-
-
-
 const navBar = new NavBar(siteContent["nav"]);
 const callToAction = new CallToAction(siteContent["cta"]);
 const mainContent = new MainContent(siteContent["main-content"]);
